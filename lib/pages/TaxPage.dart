@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +20,8 @@ class _TaxPageState extends State<TaxPage> {
   Color gold = const Color.fromARGB(255, 255, 203, 116);
 
   bool fileUploadClicked = false;
+
+  File? selectedFile = null;
 
   @override
   Widget build(BuildContext context) {
@@ -118,8 +123,8 @@ class _TaxPageState extends State<TaxPage> {
                                 BoxShadow(
                                   color: Colors.white.withOpacity(0.2),
                                   offset: fileUploadClicked
-                                      ? Offset(2.0, 2.0)
-                                      : Offset(-2, -2),
+                                      ? const Offset(2.0, 2.0)
+                                      : const Offset(-2, -2),
                                   blurRadius: 3.0,
                                 ),
                                 BoxShadow(
@@ -131,49 +136,314 @@ class _TaxPageState extends State<TaxPage> {
                                 ),
                               ],
                             ),
-                            child: InkWell(
-                              child: SizedBox(
-                                width: (MediaQuery.of(context).size.width - 92),
-                                child: Column(
-                                  children: [
-                                    const Spacer(),
-                                    const Icon(
-                                      CupertinoIcons.arrow_up_doc,
-                                      size: 40,
-                                      color: Colors.white,
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      'click to',
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 14,
-                                        color: Colors.white,
+                            child: selectedFile == null
+                                ? InkWell(
+                                    child: SizedBox(
+                                      width:
+                                          (MediaQuery.of(context).size.width -
+                                              92),
+                                      child: Column(
+                                        children: [
+                                          const Spacer(),
+                                          const Icon(
+                                            CupertinoIcons.arrow_up_doc,
+                                            size: 40,
+                                            color: Colors.white,
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            'click to',
+                                            style: GoogleFonts.montserrat(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                              'upload transaction statement from exchange',
+                                              style: GoogleFonts.montserrat(
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 14,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center),
+                                          const Spacer()
+                                        ],
                                       ),
                                     ),
-                                    Text(
-                                        'upload transaction statement from exchange',
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 14,
-                                          color: Colors.white,
+                                    onTap: () => {
+                                      setState(() {
+                                        fileUploadClicked = true;
+                                      }),
+                                      Timer(const Duration(milliseconds: 150),
+                                          () async {
+                                        setState(() {
+                                          fileUploadClicked = false;
+                                        });
+                                        FilePickerResult? result =
+                                            await FilePicker.platform
+                                                .pickFiles();
+                                        if (result != null) {
+                                          File file =
+                                              File(result.files.single.path!);
+                                          setState(() {
+                                            selectedFile = file;
+                                          });
+                                        } else {
+                                          // User canceled the picker
+                                        }
+                                      })
+                                    },
+                                  )
+                                : SizedBox(
+                                    width: (MediaQuery.of(context).size.width -
+                                        92),
+                                    child: Column(children: [
+                                      const Spacer(),
+                                      SizedBox(
+                                        height: 158,
+                                        child: Flex(
+                                          direction: Axis.horizontal,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  const Icon(
+                                                    CupertinoIcons
+                                                        .doc_checkmark,
+                                                    color: Colors.white,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Text(
+                                                    basename(selectedFile!.path)
+                                                                .length >
+                                                            10
+                                                        ? basename(selectedFile!
+                                                                    .path)
+                                                                .substring(
+                                                                    0, 10) +
+                                                            '...' +
+                                                            basename(
+                                                                    selectedFile!
+                                                                        .path)
+                                                                .substring(basename(selectedFile!
+                                                                            .path)
+                                                                        .length -
+                                                                    10)
+                                                        : basename(
+                                                            selectedFile!.path),
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Column(
+                                                  children: [
+                                                    Spacer(),
+                                                    Container(
+                                                      height: 40,
+                                                      width: 90,
+                                                      padding:
+                                                          EdgeInsets.all(4),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: const Color
+                                                                .fromARGB(
+                                                            255, 41, 45, 50),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.2),
+                                                            offset:
+                                                                const Offset(
+                                                                    -2, -2),
+                                                            blurRadius: 3.0,
+                                                          ),
+                                                          BoxShadow(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.5),
+                                                            offset:
+                                                                const Offset(
+                                                                    3.0, 3.0),
+                                                            blurRadius: 3.0,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Container(
+                                                        height: 32,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: const Color
+                                                                  .fromARGB(
+                                                              255, 39, 129, 99),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                      0.2),
+                                                              offset:
+                                                                  const Offset(
+                                                                      2, 2),
+                                                              blurRadius: 3.0,
+                                                            ),
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                              offset:
+                                                                  const Offset(
+                                                                      -3.0,
+                                                                      -3.0),
+                                                              blurRadius: 3.0,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              CupertinoIcons
+                                                                  .checkmark_alt,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    InkWell(
+                                                      child: Container(
+                                                        height: 40,
+                                                        width: 90,
+                                                        padding:
+                                                            EdgeInsets.all(4),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: const Color
+                                                                  .fromARGB(
+                                                              255, 41, 45, 50),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                      0.2),
+                                                              offset:
+                                                                  const Offset(
+                                                                      -2, -2),
+                                                              blurRadius: 3.0,
+                                                            ),
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                              offset:
+                                                                  const Offset(
+                                                                      3.0, 3.0),
+                                                              blurRadius: 3.0,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        child: Container(
+                                                          height: 32,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                220,
+                                                                179,
+                                                                71,
+                                                                89),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .white
+                                                                    .withOpacity(
+                                                                        0.2),
+                                                                offset:
+                                                                    const Offset(
+                                                                        2, 2),
+                                                                blurRadius: 3.0,
+                                                              ),
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                                offset:
+                                                                    const Offset(
+                                                                        -3.0,
+                                                                        -3.0),
+                                                                blurRadius: 3.0,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Icon(
+                                                                CupertinoIcons
+                                                                    .trash,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: 15,
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      onTap: () => {
+                                                        setState(() => {
+                                                              selectedFile =
+                                                                  null
+                                                            })
+                                                      },
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                          ],
                                         ),
-                                        textAlign: TextAlign.center),
-                                    const Spacer()
-                                  ],
-                                ),
-                              ),
-                              onTap: () => {
-                                setState(() {
-                                  fileUploadClicked = true;
-                                }),
-                                Timer(Duration(milliseconds: 150), () {
-                                  setState(() {
-                                    fileUploadClicked = false;
-                                  });
-                                })
-                              },
-                            ),
+                                      )
+                                    ])),
                           ),
                         ),
                       ),
@@ -184,7 +454,7 @@ class _TaxPageState extends State<TaxPage> {
                   margin: const EdgeInsets.only(top: 25),
                   child: Row(
                     children: [
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: Text(
                           'Unable to find transaction statement of your exchange?',
@@ -226,11 +496,11 @@ class _TaxPageState extends State<TaxPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ExchangeStoryPill(),
-                            SizedBox(width: 15),
-                            ExchangeStoryPill(),
-                            SizedBox(width: 15),
-                            ExchangeStoryPill(),
+                            const ExchangeStoryPill(),
+                            const SizedBox(width: 15),
+                            const ExchangeStoryPill(),
+                            const SizedBox(width: 15),
+                            const ExchangeStoryPill(),
                           ]),
                     ),
                   ),
@@ -284,11 +554,13 @@ class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
             // color: const Color.fromARGB(255, 41, 45, 50),
             gradient: RadialGradient(
                 colors: [
-                  Color.fromARGB(255, 37, 143, 85),
-                  Color.fromARGB(255, 27, 82, 51),
+                  const Color.fromARGB(255, 37, 143, 85),
+                  const Color.fromARGB(255, 27, 82, 51),
                 ],
                 radius: 1,
-                center: !isClicked ? Alignment(-1, -0.8) : Alignment(0, 0)),
+                center: !isClicked
+                    ? const Alignment(-1, -0.8)
+                    : const Alignment(0, 0)),
             boxShadow: [
               BoxShadow(
                 color: Colors.white.withOpacity(0.3),
@@ -307,7 +579,7 @@ class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
           setState(() {
             isClicked = true;
           }),
-          Timer(Duration(milliseconds: 150), () {
+          Timer(const Duration(milliseconds: 150), () {
             setState(() {
               isClicked = false;
             });
