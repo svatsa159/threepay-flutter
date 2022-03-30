@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "469194955754",
+    "project_id": "pay-firebase-auth",
+    "storage_bucket": "pay-firebase-auth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469194955754:android:d65ec6df98f948f38e3093",
+        "android_client_info": {
+          "package_name": "com.three.pay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "469194955754-r3lp7opgv8rge5i7r1d3o1pkbgej5u7i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.three.pay",
+            "certificate_hash": "08a4e0f56344c1d699c73ce7f236433c25a46e8d"
+          }
+        },
+        {
+          "client_id": "469194955754-d8nnqlfo9lh7s4b1cittk2j600vjecum.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGcFbs1v2wv6Cd6grM1u7tT04wWQZjEyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "469194955754-d8nnqlfo9lh7s4b1cittk2j600vjecum.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
