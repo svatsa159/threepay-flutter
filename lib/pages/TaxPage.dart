@@ -6,7 +6,10 @@ import 'package:path/path.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:story_view/story_view.dart';
+
 import 'package:threepay/components/BackButton.dart';
+import 'package:threepay/pages/StoryPageView.dart';
 
 class TaxPage extends StatefulWidget {
   const TaxPage({Key? key}) : super(key: key);
@@ -36,7 +39,7 @@ class _TaxPageState extends State<TaxPage> {
               width: MediaQuery.of(context).size.width - 50,
               child: Column(children: [
                 Row(
-                  children: [const BackNeuButton()],
+                  children: const [BackNeuButton()],
                 ),
                 Row(
                   children: [
@@ -253,12 +256,13 @@ class _TaxPageState extends State<TaxPage> {
                                                 flex: 1,
                                                 child: Column(
                                                   children: [
-                                                    Spacer(),
+                                                    const Spacer(),
                                                     Container(
                                                       height: 40,
                                                       width: 90,
                                                       padding:
-                                                          EdgeInsets.all(4),
+                                                          const EdgeInsets.all(
+                                                              4),
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -325,7 +329,7 @@ class _TaxPageState extends State<TaxPage> {
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .center,
-                                                          children: [
+                                                          children: const [
                                                             Icon(
                                                               CupertinoIcons
                                                                   .checkmark_alt,
@@ -336,7 +340,7 @@ class _TaxPageState extends State<TaxPage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 20,
                                                     ),
                                                     InkWell(
@@ -344,7 +348,8 @@ class _TaxPageState extends State<TaxPage> {
                                                         height: 40,
                                                         width: 90,
                                                         padding:
-                                                            EdgeInsets.all(4),
+                                                            const EdgeInsets
+                                                                .all(4),
                                                         decoration:
                                                             BoxDecoration(
                                                           borderRadius:
@@ -418,7 +423,7 @@ class _TaxPageState extends State<TaxPage> {
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .center,
-                                                            children: [
+                                                            children: const [
                                                               Icon(
                                                                 CupertinoIcons
                                                                     .trash,
@@ -437,7 +442,7 @@ class _TaxPageState extends State<TaxPage> {
                                                             })
                                                       },
                                                     ),
-                                                    Spacer(),
+                                                    const Spacer(),
                                                   ],
                                                 )),
                                           ],
@@ -488,19 +493,16 @@ class _TaxPageState extends State<TaxPage> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Container(
-                      height: 90,
+                      height: 120,
                       width: MediaQuery.of(context).size.width - 50,
                       padding: const EdgeInsets.all(5),
                       alignment: Alignment.centerLeft,
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const ExchangeStoryPill(),
-                            const SizedBox(width: 15),
-                            const ExchangeStoryPill(),
-                            const SizedBox(width: 15),
-                            const ExchangeStoryPill(),
+                          children: const [
+                            ExchangeStoryPill(),
+                            SizedBox(width: 15)
                           ]),
                     ),
                   ),
@@ -527,65 +529,111 @@ class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
   bool isClicked = false;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 80,
-      height: 80,
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(60.0),
-        color: const Color.fromARGB(255, 41, 45, 50),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withOpacity(0.3),
-            offset: const Offset(-2.0, -2.0),
-            blurRadius: 7.0,
+    return Column(
+      children: [
+        Container(
+            width: 80,
+            height: 80,
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60.0),
+              color: const Color.fromARGB(255, 41, 45, 50),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.3),
+                  offset: const Offset(-2.0, -2.0),
+                  blurRadius: 7.0,
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.8),
+                  offset: const Offset(3.0, 3.0),
+                  blurRadius: 7.0,
+                ),
+              ],
+            ),
+            child: InkWell(
+              child: Container(
+                  height: 70,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(60.0),
+                    // color: const Color.fromARGB(255, 41, 45, 50),
+                    gradient: RadialGradient(
+                        colors: const [
+                          // Color.fromARGB(255, 37, 143, 132),
+                          // Color.fromARGB(255, 27, 72, 82),
+                          Color.fromARGB(119, 255, 255, 255),
+                          Color.fromARGB(255, 255, 255, 255)
+                        ],
+                        radius: 1,
+                        center: !isClicked
+                            ? const Alignment(-1, -0.8)
+                            : const Alignment(0, 0)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.3),
+                        offset: const Offset(2.0, 2.0),
+                        blurRadius: 7.0,
+                      ),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.8),
+                        offset: const Offset(-3.0, -3.0),
+                        blurRadius: 7.0,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/vauld/vauld_logo_light.png',
+                      width: 30,
+                    ),
+                  )),
+              onTap: () => {
+                setState(() {
+                  isClicked = true;
+                }),
+                Timer(const Duration(milliseconds: 150), () {
+                  setState(() {
+                    isClicked = false;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StoryPageView(
+                                  storyItems: [
+                                    StoryItem.pageProviderImage(
+                                      const AssetImage(
+                                          'assets/images/vauld/Step1.png'),
+                                      imageFit: BoxFit.contain,
+                                    ),
+                                    StoryItem.pageProviderImage(
+                                      const AssetImage(
+                                          'assets/images/vauld/Step2.png'),
+                                      imageFit: BoxFit.contain,
+                                    ),
+                                    StoryItem.pageProviderImage(
+                                      const AssetImage(
+                                          'assets/images/vauld/Step3.png'),
+                                      imageFit: BoxFit.contain,
+                                    ),
+                                    StoryItem.pageProviderImage(
+                                      const AssetImage(
+                                          'assets/images/vauld/Step4.png'),
+                                      imageFit: BoxFit.contain,
+                                    ),
+                                  ],
+                                )));
+                  });
+                })
+              },
+            )),
+        Text(
+          'vauld',
+          style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w300,
+            fontSize: 12,
+            color: Colors.white,
           ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.8),
-            offset: const Offset(3.0, 3.0),
-            blurRadius: 7.0,
-          ),
-        ],
-      ),
-      child: InkWell(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(60.0),
-            // color: const Color.fromARGB(255, 41, 45, 50),
-            gradient: RadialGradient(
-                colors: [
-                  const Color.fromARGB(255, 37, 143, 85),
-                  const Color.fromARGB(255, 27, 82, 51),
-                ],
-                radius: 1,
-                center: !isClicked
-                    ? const Alignment(-1, -0.8)
-                    : const Alignment(0, 0)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.3),
-                offset: const Offset(2.0, 2.0),
-                blurRadius: 7.0,
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.8),
-                offset: const Offset(-3.0, -3.0),
-                blurRadius: 7.0,
-              ),
-            ],
-          ),
-        ),
-        onTap: () => {
-          setState(() {
-            isClicked = true;
-          }),
-          Timer(const Duration(milliseconds: 150), () {
-            setState(() {
-              isClicked = false;
-            });
-          })
-        },
-      ),
+        )
+      ],
     );
   }
 }
