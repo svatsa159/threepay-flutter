@@ -37,7 +37,7 @@ class _BackNeuButtonState extends State<BackNeuButton> {
           ],
         ),
         child: Container(
-          padding: EdgeInsets.all(3),
+          padding: const EdgeInsets.all(3),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
@@ -79,7 +79,7 @@ class _BackNeuButtonState extends State<BackNeuButton> {
       onTap: () => {
         setState(() {
           isBackClicked = true;
-          Timer(Duration(milliseconds: 150), () {
+          Timer(const Duration(milliseconds: 150), () {
             setState(() {
               isBackClicked = false;
             });

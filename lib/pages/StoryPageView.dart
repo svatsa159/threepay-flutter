@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/story_view.dart';
 
 class StoryPageView extends StatefulWidget {
@@ -23,7 +22,7 @@ class _StoryPageViewState extends State<StoryPageView> {
         controller: controller,
         inline: false,
         repeat: true,
-        onComplete: () => Navigator.pop(context),
+        onComplete: () => {Navigator.pop(context)},
         onVerticalSwipeComplete: (direction) => {
           if (direction != null && direction == Direction.down)
             {Navigator.pop(context)}

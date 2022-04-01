@@ -100,7 +100,7 @@ class _DashboardState extends State<Dashboard> {
   logout() {
     setState(() {
       isLogoutClicked = true;
-      Timer(Duration(milliseconds: 100), () {
+      Timer(const Duration(milliseconds: 100), () {
         setState(() {
           isLogoutClicked = false;
         });
@@ -112,7 +112,7 @@ class _DashboardState extends State<Dashboard> {
   buttonClick(Function function) {
     setState(() {
       isClicked = true;
-      Timer(Duration(milliseconds: 100), () {
+      Timer(const Duration(milliseconds: 100), () {
         setState(() {
           isClicked = false;
         });
@@ -124,7 +124,7 @@ class _DashboardState extends State<Dashboard> {
   buttonComputeClick(Function function) {
     setState(() {
       isComputeClicked = true;
-      Timer(Duration(milliseconds: 100), () {
+      Timer(const Duration(milliseconds: 100), () {
         setState(() {
           isComputeClicked = false;
         });
@@ -137,7 +137,7 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       isTaxClicked = true;
     });
-    Timer(Duration(milliseconds: 200), () {
+    Timer(const Duration(milliseconds: 200), () {
       setState(() {
         isTaxClicked = false;
       });
@@ -769,9 +769,9 @@ class _GSignInState extends State<GSignIn> {
                               color: gold,
                               size: 60,
                             )
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: const CircularProgressIndicator(
+                          : const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
                                 color: Colors.white,
                               ),
                             ),
@@ -795,9 +795,9 @@ class ThreePayCard extends StatefulWidget {
 
 class _ThreePayCardState extends State<ThreePayCard> {
   Color gold = const Color.fromARGB(255, 255, 203, 116);
-  Color green = Color.fromARGB(255, 60, 184, 111);
-  Color goldDark = Color.fromARGB(255, 223, 172, 91);
-  Color greenDark = Color.fromARGB(255, 53, 150, 93);
+  Color green = const Color.fromARGB(255, 60, 184, 111);
+  Color goldDark = const Color.fromARGB(255, 223, 172, 91);
+  Color greenDark = const Color.fromARGB(255, 53, 150, 93);
 
   backClick(Function function) {}
 
@@ -853,7 +853,7 @@ class _ThreePayCardState extends State<ThreePayCard> {
                           ),
                         ]),
                         Container(
-                          margin: EdgeInsets.only(top: 20),
+                          margin: const EdgeInsets.only(top: 20),
                           child: Text(
                             '3Pay Card - India\'s First Credit card for crypto holders.\n\nGet a credit card based on your crypto lying around lazily in your exchanges.',
                             style: GoogleFonts.montserrat(
@@ -871,11 +871,11 @@ class _ThreePayCardState extends State<ThreePayCard> {
           Container(
             height: 100,
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.transparent,
             ),
             child: Container(
-              padding: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),
                 color: const Color.fromARGB(255, 41, 45, 50),

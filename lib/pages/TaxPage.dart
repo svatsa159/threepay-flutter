@@ -556,18 +556,7 @@ class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
                   height: 70,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(60.0),
-                    // color: const Color.fromARGB(255, 41, 45, 50),
-                    gradient: RadialGradient(
-                        colors: const [
-                          // Color.fromARGB(255, 37, 143, 132),
-                          // Color.fromARGB(255, 27, 72, 82),
-                          Color.fromARGB(119, 255, 255, 255),
-                          Color.fromARGB(255, 255, 255, 255)
-                        ],
-                        radius: 1,
-                        center: !isClicked
-                            ? const Alignment(-1, -0.8)
-                            : const Alignment(0, 0)),
+                    color: Colors.white,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.white.withOpacity(0.3),
@@ -581,12 +570,30 @@ class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
                       ),
                     ],
                   ),
-                  child: Center(
-                    child: Image.asset(
-                      'assets/images/vauld/vauld_logo_light.png',
-                      width: 30,
+                  child: Stack(children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/images/vauld/vauld_logo_light.png',
+                        width: 30,
+                      ),
                     ),
-                  )),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(60.0),
+                        gradient: RadialGradient(
+                            colors: const [
+                              // Color.fromARGB(255, 37, 143, 132),
+                              // Color.fromARGB(255, 27, 72, 82),
+                              Color.fromARGB(0, 0, 0, 0),
+                              Color.fromARGB(152, 0, 0, 0)
+                            ],
+                            radius: isClicked ? 0.8 : 1.3,
+                            center: !isClicked
+                                ? const Alignment(-1, -0.8)
+                                : const Alignment(0.4, 0.6)),
+                      ),
+                    )
+                  ])),
               onTap: () => {
                 setState(() {
                   isClicked = true;
@@ -619,18 +626,26 @@ class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
                                           'assets/images/vauld/Step4.png'),
                                       imageFit: BoxFit.contain,
                                     ),
+                                    StoryItem.pageProviderImage(
+                                      const AssetImage(
+                                          'assets/images/vauld/Step5.png'),
+                                      imageFit: BoxFit.contain,
+                                    ),
                                   ],
                                 )));
                   });
                 })
               },
             )),
-        Text(
-          'vauld',
-          style: GoogleFonts.montserrat(
-            fontWeight: FontWeight.w300,
-            fontSize: 12,
-            color: Colors.white,
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Text(
+            'vauld',
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w300,
+              fontSize: 12,
+              color: Colors.white,
+            ),
           ),
         )
       ],
