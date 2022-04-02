@@ -501,8 +501,19 @@ class _TaxPageState extends State<TaxPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
-                            ExchangeStoryPill(),
-                            SizedBox(width: 15)
+                            ExchangeStoryPill(
+                                exchangeLogoUrl:
+                                    'assets/images/vauld/vauld_logo_light.png',
+                                nameOfExchange: 'vauld',
+                                numberOfSteps: 5,
+                                sizeOfExchangeLogo: 30),
+                            SizedBox(width: 15),
+                            ExchangeStoryPill(
+                                exchangeLogoUrl:
+                                    'assets/images/wazirx/Wazirx.png',
+                                nameOfExchange: 'wazirx',
+                                numberOfSteps: 6,
+                                sizeOfExchangeLogo: 65),
                           ]),
                     ),
                   ),
@@ -517,9 +528,18 @@ class _TaxPageState extends State<TaxPage> {
 }
 
 class ExchangeStoryPill extends StatefulWidget {
-  const ExchangeStoryPill({
-    Key? key,
-  }) : super(key: key);
+  const ExchangeStoryPill(
+      {Key? key,
+      required this.numberOfSteps,
+      required this.nameOfExchange,
+      required this.exchangeLogoUrl,
+      required this.sizeOfExchangeLogo})
+      : super(key: key);
+
+  final int numberOfSteps;
+  final String nameOfExchange;
+  final String exchangeLogoUrl;
+  final double sizeOfExchangeLogo;
 
   @override
   State<ExchangeStoryPill> createState() => _ExchangeStoryPillState();
@@ -527,6 +547,7 @@ class ExchangeStoryPill extends StatefulWidget {
 
 class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
   bool isClicked = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -573,8 +594,8 @@ class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
                   child: Stack(children: [
                     Center(
                       child: Image.asset(
-                        'assets/images/vauld/vauld_logo_light.png',
-                        width: 30,
+                        widget.exchangeLogoUrl,
+                        width: widget.sizeOfExchangeLogo,
                       ),
                     ),
                     Container(
@@ -605,42 +626,26 @@ class _ExchangeStoryPillState extends State<ExchangeStoryPill> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => StoryPageView(
-                                  storyItems: [
-                                    StoryItem.pageProviderImage(
-                                      const AssetImage(
-                                          'assets/images/vauld/Step1.png'),
+                                  storyItems: List.generate(
+                                      widget.numberOfSteps, (index) {
+                                    return StoryItem.pageProviderImage(
+                                      AssetImage('assets/images/' +
+                                          widget.nameOfExchange +
+                                          '/Step' +
+                                          (index + 1).toString() +
+                                          '.png'),
                                       imageFit: BoxFit.contain,
-                                    ),
-                                    StoryItem.pageProviderImage(
-                                      const AssetImage(
-                                          'assets/images/vauld/Step2.png'),
-                                      imageFit: BoxFit.contain,
-                                    ),
-                                    StoryItem.pageProviderImage(
-                                      const AssetImage(
-                                          'assets/images/vauld/Step3.png'),
-                                      imageFit: BoxFit.contain,
-                                    ),
-                                    StoryItem.pageProviderImage(
-                                      const AssetImage(
-                                          'assets/images/vauld/Step4.png'),
-                                      imageFit: BoxFit.contain,
-                                    ),
-                                    StoryItem.pageProviderImage(
-                                      const AssetImage(
-                                          'assets/images/vauld/Step5.png'),
-                                      imageFit: BoxFit.contain,
-                                    ),
-                                  ],
+                                    );
+                                  }),
                                 )));
                   });
                 })
               },
             )),
         Container(
-          margin: EdgeInsets.only(top: 10),
+          margin: const EdgeInsets.only(top: 10),
           child: Text(
-            'vauld',
+            widget.nameOfExchange,
             style: GoogleFonts.montserrat(
               fontWeight: FontWeight.w300,
               fontSize: 12,
