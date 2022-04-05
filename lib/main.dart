@@ -2,11 +2,16 @@ import 'dart:async';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:lottie/lottie.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:threepay/adapters/UserAdapter.dart';
 import 'package:threepay/components/BackButton.dart';
 import 'package:threepay/pages/TaxPage.dart';
 
@@ -35,7 +40,8 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/home': (context) => const Wrapper(),
         '/threepaycard': ((context) => const ThreePayCard()),
-        '/tax': (context) => const TaxPage()
+        '/tax': (context) => const TaxPage(),
+        '/tax-generated': (context) => const TaxExtracted()
         // '/dash': (context) => const Dashboard(),
       },
       theme:
@@ -74,6 +80,8 @@ class _WrapperState extends State<Wrapper> {
     if (user == null) {
       return const ThreeHome();
     } else {
+      UserAdapter().createUser(user?.displayName ?? "", user?.phoneNumber ?? "",
+          user?.photoURL ?? "", user?.email ?? "", user?.uid ?? "");
       return Dashboard(
         user: (user!),
       );
@@ -150,7 +158,7 @@ class _DashboardState extends State<Dashboard> {
   bool isClicked = false;
   bool isTaxClicked = false;
 
-  Color gold = const Color.fromARGB(255, 255, 203, 116);
+  Color gold = Color.fromARGB(255, 255, 203, 116);
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -204,10 +212,11 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                widget.user.photoURL!,
-                                width: 50,
-                              )),
+                              child: FadeInImage(
+                                  image: NetworkImage(widget.user.photoURL!),
+                                  width: 50,
+                                  placeholder: const AssetImage(
+                                      "assets/images/default-image.png"))),
                         ),
                       ),
                     ),
@@ -433,7 +442,9 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                     ),
                                     onTap: () => buttonTaxClick(() {
-                                      Navigator.pushNamed(context, '/tax');
+                                      Navigator.pushNamed(context, '/tax',
+                                          arguments:
+                                              TaxPageArgs(widget.user.uid));
                                     }),
                                   ),
                                 )
@@ -568,7 +579,9 @@ class _DashboardState extends State<Dashboard> {
                                   onTap: () => {
                                     buttonClick(() => {
                                           Navigator.pushNamed(
-                                              context, '/threepaycard')
+                                              context, '/threepaycard',
+                                              arguments: ThreePayCardArgs(
+                                                  uid: widget.user.uid))
                                         })
                                   },
                                 )
@@ -786,6 +799,12 @@ class _GSignInState extends State<GSignIn> {
   }
 }
 
+class ThreePayCardArgs {
+  final String uid;
+
+  ThreePayCardArgs({required this.uid});
+}
+
 class ThreePayCard extends StatefulWidget {
   const ThreePayCard({Key? key}) : super(key: key);
 
@@ -803,133 +822,335 @@ class _ThreePayCardState extends State<ThreePayCard> {
 
   bool isBackClicked = false;
 
+  bool isWaitlistClicked = false;
+
+  bool isWaitlisted = false;
+
+  bool isWaitlistLoading = false;
+
+  bool isShareClicked = false;
+
+  bool isAnimated = false;
+
+  joinWaitlist(String uid) {
+    UserAdapter()
+        .toggleWaitlist(uid)
+        .then((done) => {
+              if (done)
+                {
+                  setState(() => {isWaitlistLoading = false, isAnimated = true})
+                }
+              else
+                {
+                  setState(() => {isWaitlistLoading = false})
+                }
+            })
+        .catchError(() => {
+              setState(() => {isWaitlistLoading = false}),
+              // throw Error()
+            });
+  }
+
   @override
   Widget build(BuildContext context) {
+    ThreePayCardArgs args =
+        ModalRoute.of(context)!.settings.arguments as ThreePayCardArgs;
     return Material(
       color: const Color.fromARGB(255, 41, 45, 50),
-      child: Column(
+      child: Stack(
         children: [
-          Expanded(
-            child: Container(
-                decoration:
-                    const BoxDecoration(color: Color.fromARGB(255, 41, 45, 50)),
-                child: SingleChildScrollView(
-                  child: Container(
-                    padding: const EdgeInsets.all(25),
-                    child: SafeArea(
-                      child: Column(children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
-                          height:
-                              (MediaQuery.of(context).size.width - 100) * 1.2,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                left: 25,
-                                child: Image.asset(
-                                  'assets/images/3PayCard.png',
-                                  width:
-                                      MediaQuery.of(context).size.width - 100,
+          Column(
+            children: [
+              Expanded(
+                child: Container(
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 41, 45, 50)),
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding: const EdgeInsets.all(25),
+                        child: SafeArea(
+                          child: Column(children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width - 50,
+                              height:
+                                  (MediaQuery.of(context).size.width - 100) *
+                                      1.2,
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: 25,
+                                    child: Image.asset(
+                                      'assets/images/3PayCard.png',
+                                      width: MediaQuery.of(context).size.width -
+                                          100,
+                                    ),
+                                  ),
+                                  const Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    height: 50,
+                                    child: BackNeuButton(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(children: [
+                              Text(
+                                '3Pay Card',
+                                // overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 35,
+                                  color: gold,
                                 ),
                               ),
-                              const Positioned(
-                                top: 0,
-                                left: 0,
-                                height: 50,
-                                child: BackNeuButton(),
+                            ]),
+                            Container(
+                              margin: const EdgeInsets.only(top: 20),
+                              child: Text(
+                                '3Pay Card - India\'s First Credit card for crypto holders.\n\nGet a credit card based on your crypto lying around lazily in your exchanges.',
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ],
-                          ),
+                            )
+                          ]),
                         ),
-                        Row(children: [
-                          Text(
-                            '3Pay Card',
-                            // overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 35,
-                              color: gold,
-                            ),
-                          ),
-                        ]),
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: Text(
-                            '3Pay Card - India\'s First Credit card for crypto holders.\n\nGet a credit card based on your crypto lying around lazily in your exchanges.',
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 20,
+                      ),
+                    )),
+              ),
+              Container(
+                  height: 100,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                  ),
+                  child: FutureBuilder<bool>(
+                      future: UserAdapter().getIsWaitlist(args.uid),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return Container();
+                          case ConnectionState.waiting:
+                            return SpinKitThreeBounce(
                               color: Colors.white,
-                            ),
-                          ),
-                        )
-                      ]),
-                    ),
-                  ),
-                )),
+                              size: 20.0,
+                            );
+                            break;
+                          case ConnectionState.active:
+                            return SpinKitThreeBounce(
+                              color: Colors.white,
+                              size: 20.0,
+                            );
+                            break;
+                          case ConnectionState.done:
+                            return snapshot.data!
+                                ? Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          'You have joined the elite',
+                                          style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                            color: gold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      InkWell(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 41, 45, 50),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.white
+                                                    .withOpacity(0.3),
+                                                offset:
+                                                    const Offset(-4.0, -4.0),
+                                                blurRadius: 13.0,
+                                              ),
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.8),
+                                                offset: const Offset(6.0, 6.0),
+                                                blurRadius: 13.0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(
+                                                isShareClicked ? 2.0 : 4.0),
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      255, 41, 45, 50),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white
+                                                          .withOpacity(
+                                                              isShareClicked
+                                                                  ? 0.5
+                                                                  : 0.3),
+                                                      offset: const Offset(
+                                                          2.0, 2.0),
+                                                      blurRadius: 3.0,
+                                                    ),
+                                                    BoxShadow(
+                                                      color: Colors.black
+                                                          .withOpacity(
+                                                              isShareClicked
+                                                                  ? 1.0
+                                                                  : 0.8),
+                                                      offset: const Offset(
+                                                          -2.0, -2.0),
+                                                      blurRadius: 3.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical:
+                                                                isShareClicked
+                                                                    ? 12
+                                                                    : 10,
+                                                            horizontal:
+                                                                isShareClicked
+                                                                    ? 22
+                                                                    : 20),
+                                                    child: Icon(
+                                                      Ionicons
+                                                          .share_social_outline,
+                                                      color: gold,
+                                                    ))),
+                                          ),
+                                        ),
+                                        onTap: () => {
+                                          Share.share(
+                                            'Hey! Checkout how I am calculating my crypto taxes with a single click on 3Pay. Check them out on https://3pay.club',
+                                          )
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                : InkWell(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 41, 45, 50),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.white.withOpacity(0.3),
+                                            offset: const Offset(-4.0, -4.0),
+                                            blurRadius: 13.0,
+                                          ),
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            offset: const Offset(6.0, 6.0),
+                                            blurRadius: 13.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(
+                                            isWaitlistClicked ? 2.0 : 4.0),
+                                        child: Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                  255, 255, 203, 116),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.white
+                                                      .withOpacity(
+                                                          isWaitlistClicked
+                                                              ? 0.5
+                                                              : 0.3),
+                                                  offset:
+                                                      const Offset(2.0, 2.0),
+                                                  blurRadius: 3.0,
+                                                ),
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(
+                                                          isWaitlistClicked
+                                                              ? 1.0
+                                                              : 0.8),
+                                                  offset:
+                                                      const Offset(-2.0, -2.0),
+                                                  blurRadius: 3.0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: isWaitlistClicked
+                                                      ? 12
+                                                      : 10,
+                                                  horizontal: isWaitlistClicked
+                                                      ? 22
+                                                      : 20),
+                                              child: !isWaitlistLoading
+                                                  ? Text(
+                                                      'Join Waitlist',
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        fontWeight:
+                                                            FontWeight.w200,
+                                                        fontSize: 25,
+                                                        color: Colors.black,
+                                                      ),
+                                                    )
+                                                  : SpinKitThreeBounce(
+                                                      color: Colors.black,
+                                                      size: 20.0,
+                                                    ),
+                                            )),
+                                      ),
+                                    ),
+                                    onTap: () => {
+                                      setState(() => {
+                                            isWaitlistClicked = true,
+                                            isWaitlistLoading = true
+                                          }),
+                                      Timer(
+                                          Duration(milliseconds: 400),
+                                          () => {
+                                                setState(() => {
+                                                      isWaitlistClicked = false,
+                                                    }),
+                                                joinWaitlist(args.uid)
+                                              })
+                                    },
+                                  );
+                        }
+                      }))
+            ],
           ),
-          Container(
-            height: 100,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: const Color.fromARGB(255, 41, 45, 50),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.3),
-                    offset: const Offset(-2.0, -2.0),
-                    blurRadius: 7.0,
-                  ),
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.8),
-                    offset: const Offset(3.0, 3.0),
-                    blurRadius: 7.0,
-                  ),
-                ],
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                alignment: AlignmentDirectional.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.0),
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft, end: Alignment.bottomRight,
-                      // colors: [green, greenDark]),
-                      colors: [gold, goldDark]),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.3),
-                      offset: const Offset(2.0, 2.0),
-                      blurRadius: 7.0,
-                    ),
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.8),
-                      offset: const Offset(-3.0, -3.0),
-                      blurRadius: 7.0,
-                    ),
-                  ],
-                ),
-                child: Text(
-                  'Join Waitlist',
-                  style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 20,
-                      color: Colors.black,
-                      shadows: [
-                        // Shadow(
-                        //   color: Colors.black.withOpacity(0.8),
-                        //   offset: const Offset(1.0, 1.0),
-                        //   blurRadius: 7.0,
-                        // ),
-                      ]),
-                ),
-              ),
-            ),
+          Positioned(
+            bottom: 80,
+            right: 0,
+            child: Lottie.asset('assets/images/success.json',
+                repeat: false,
+                animate: isAnimated,
+                width: MediaQuery.of(context).size.width),
           )
         ],
       ),
