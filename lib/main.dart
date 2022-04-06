@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +13,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:threepay/adapters/UserAdapter.dart';
 import 'package:threepay/components/BackButton.dart';
 import 'package:threepay/pages/TaxPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Three Pay',
+      title: '3Pay',
       initialRoute: '/home',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
@@ -215,6 +215,11 @@ class _DashboardState extends State<Dashboard> {
                               child: FadeInImage(
                                   image: NetworkImage(widget.user.photoURL!),
                                   width: 50,
+                                  imageErrorBuilder: (context, o, e) =>
+                                      Image.asset(
+                                        "assets/images/default-image.png",
+                                        width: 50,
+                                      ),
                                   placeholder: const AssetImage(
                                       "assets/images/default-image.png"))),
                         ),
@@ -312,11 +317,11 @@ class _DashboardState extends State<Dashboard> {
                       width: MediaQuery.of(context).size.width - 40,
                       margin: const EdgeInsets.only(top: 5),
                       child: Text(
-                        'What\'s on your mind today?',
+                        'here\'s what we have for you',
                         // overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w600,
-                          fontSize: 22,
+                          fontSize: 18,
                           color: const Color.fromARGB(234, 255, 255, 255),
                         ),
                       ),
@@ -328,7 +333,7 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width - 40,
-                      height: 235,
+                      height: 250,
                       margin: const EdgeInsets.only(top: 50),
                       padding: const EdgeInsets.all(30),
                       decoration: BoxDecoration(
@@ -364,8 +369,9 @@ class _DashboardState extends State<Dashboard> {
                               height: 10,
                             ),
                             Text(
-                              'Compute Crypto Taxes based on your investments in leading Exchanges',
-                              // overflow: TextOverflow.ellipsis,
+                              'Get a clear overview of your tax liabilities along with a detailed report, generated within seconds.',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
                               style: GoogleFonts.montserrat(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 15,
@@ -459,7 +465,7 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width - 40,
-                      height: 225,
+                      height: 250,
                       margin: const EdgeInsets.only(top: 50),
                       padding: const EdgeInsets.all(30),
                       decoration: BoxDecoration(
@@ -495,8 +501,9 @@ class _DashboardState extends State<Dashboard> {
                               height: 10,
                             ),
                             Text(
-                              'India\'s First Crypto backed Credit Card',
-                              // overflow: TextOverflow.ellipsis,
+                              'Bringing utility to crypto, with India\'s first Crypto Rewards Card.',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
                               style: GoogleFonts.montserrat(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 15,
@@ -606,6 +613,14 @@ class ThreeHome extends StatefulWidget {
 }
 
 class _ThreeHomeState extends State<ThreeHome> {
+  openUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw "Could not launch $url";
+    }
+  }
+
   Color gold = const Color.fromARGB(255, 255, 203, 116);
   @override
   Widget build(BuildContext context) {
@@ -617,75 +632,148 @@ class _ThreeHomeState extends State<ThreeHome> {
           bottom: false,
           right: false,
           left: false,
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Row(
-              children: [
-                Container(
-                  height: 600,
-                  width: MediaQuery.of(context).size.width - 40,
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 100, horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        child: DefaultTextStyle(
-                            style: GoogleFonts.montserrat(
+          child: Stack(
+            children: [
+              Positioned(
+                top: 100,
+                right: -200,
+                child: ClipRRect(
+                  child: Container(
+                      child: Opacity(
+                    opacity: 0.7,
+                    child: Image.asset(
+                      'assets/images/3.png',
+                      width: 500,
+                    ),
+                  )),
+                ),
+              ),
+              Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Row(
+                  children: [
+                    Container(
+                      height: 600,
+                      width: MediaQuery.of(context).size.width - 40,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 100, horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // SizedBox(
+                          //   height: 50,
+                          //   child: DefaultTextStyle(
+                          //       style: GoogleFonts.montserrat(
+                          //           fontWeight: FontWeight.w200,
+                          //           fontSize: 30,
+                          //           color: const Color.fromARGB(
+                          //               234, 255, 255, 255)),
+                          //       child: AnimatedTextKit(
+                          //         isRepeatingAnimation: false,
+                          //         animatedTexts: [
+                          //           TypewriterAnimatedText(
+                          //             'Welcome to',
+                          //             speed: const Duration(milliseconds: 100),
+                          //           ),
+                          //         ],
+                          //       )),
+                          // ),
+                          SizedBox(
+                            height: 100,
+                            child: DefaultTextStyle(
+                              style: GoogleFonts.montserrat(
                                 fontWeight: FontWeight.w200,
                                 fontSize: 30,
-                                color:
-                                    const Color.fromARGB(234, 255, 255, 255)),
-                            child: AnimatedTextKit(
-                              isRepeatingAnimation: false,
-                              animatedTexts: [
-                                TypewriterAnimatedText(
-                                  'Welcome to',
-                                  speed: const Duration(milliseconds: 100),
-                                ),
-                              ],
-                            )),
-                      ),
-                      SizedBox(
-                        height: 100,
-                        child: DefaultTextStyle(
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w200,
-                            fontSize: 30,
-                            color: gold,
+                                color: gold,
+                              ),
+                              child: AnimatedTextKit(
+                                isRepeatingAnimation: false,
+                                // pause: const Duration(milliseconds: 1000),
+                                animatedTexts: [
+                                  // TypewriterAnimatedText('', cursor: ''),
+                                  TypewriterAnimatedText(
+                                    '3Pay',
+                                    speed: const Duration(milliseconds: 100),
+                                    cursor: '\$',
+                                    textStyle: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 70,
+                                      color: gold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          child: AnimatedTextKit(
-                            isRepeatingAnimation: false,
-                            pause: const Duration(milliseconds: 1000),
-                            animatedTexts: [
-                              TypewriterAnimatedText('', cursor: ''),
-                              TypewriterAnimatedText(
-                                '3Pay',
-                                speed: const Duration(milliseconds: 100),
-                                cursor: '\$',
-                                textStyle: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 70,
+                          // const SizedBox(height: 50),
+                          SizedBox(
+                            height: 100,
+                            child: DefaultTextStyle(
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w200,
+                                  fontSize: 20,
                                   color: gold,
                                 ),
-                              ),
-                            ],
+                                child: Text("making crypto easy")),
                           ),
-                        ),
+                          const SizedBox(height: 200),
+                          FutureBuilder(
+                              future:
+                                  Future.delayed(const Duration(seconds: 0)),
+                              builder: (c, s) =>
+                                  s.connectionState == ConnectionState.done
+                                      ? const GSignIn()
+                                      : const Text("")),
+                          const SizedBox(height: 20),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 40,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "by logging in, you agree to our",
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w200,
+                                    fontSize: 16,
+                                    color: gold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                InkWell(
+                                    child: Container(
+                                      padding: EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              width: 1.5, color: gold),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "terms and conditions",
+                                        style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w200,
+                                          fontSize: 16,
+                                          color: gold,
+                                          // decorationThickness: 3,
+                                          // decoration: TextDecoration.underline,
+                                          // decorationColor: Colors.white
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    onTap: () =>
+                                        {openUrl('https://3pay.club/terms')}),
+                              ],
+                            ),
+                          )
+                        ],
                       ),
-                      const SizedBox(height: 300),
-                      FutureBuilder(
-                          future: Future.delayed(const Duration(seconds: 0)),
-                          builder: (c, s) =>
-                              s.connectionState == ConnectionState.done
-                                  ? const GSignIn()
-                                  : const Text(""))
-                    ],
-                  ),
+                    )
+                  ],
                 )
-              ],
-            )
-          ]),
+              ]),
+            ],
+          ),
         ),
       ),
     );
@@ -907,13 +995,49 @@ class _ThreePayCardState extends State<ThreePayCard> {
                             ]),
                             Container(
                               margin: const EdgeInsets.only(top: 20),
-                              child: Text(
-                                '3Pay Card - India\'s First Credit card for crypto holders.\n\nGet a credit card based on your crypto lying around lazily in your exchanges.',
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                ),
+                              // child: Text(
+                              //   '3Pay Card - India\'s First Crypto Rewards Card for hodlers that believe in a decentralised future. Get 3Pay Card backed by the crypto lying around lazily in your exchanges.',
+                              //   style: GoogleFonts.montserrat(
+                              //     fontWeight: FontWeight.w300,
+                              //     fontSize: 20,
+                              //     color: Colors.white,
+                              //   ),
+
+                              // ),
+                              child: RichText(
+                                text: TextSpan(
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
+                                    children: [
+                                      const TextSpan(
+                                          text:
+                                              '3Pay Card - India\'s First Crypto Rewards Card for '),
+                                      TextSpan(
+                                          text: 'hodlers',
+                                          style: GoogleFonts.montserrat(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 20,
+                                              color: gold)),
+                                      const TextSpan(
+                                          text: ' that believe in a '),
+                                      const TextSpan(
+                                          text: 'decentralised',
+                                          style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor:
+                                                  const Color.fromARGB(
+                                                      255, 255, 203, 116),
+                                              decorationStyle:
+                                                  TextDecorationStyle.wavy,
+                                              decorationThickness: 2)),
+                                      const TextSpan(
+                                          text:
+                                              ' future. \n\nGet 3Pay Card, backed by the crypto lying around lazily in your exchanges.')
+                                    ]),
                               ),
                             )
                           ]),
