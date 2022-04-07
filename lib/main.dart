@@ -761,8 +761,10 @@ class _ThreeHomeState extends State<ThreeHome> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    onTap: () =>
-                                        {openUrl('https://3pay.club/terms')}),
+                                    onTap: () => {
+                                          openUrl(
+                                              'https://3pay.club/terms.html')
+                                        }),
                               ],
                             ),
                           )
