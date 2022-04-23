@@ -349,17 +349,17 @@ class _TaxPageState extends State<TaxPage> {
                                                               basename(selectedFile!
                                                                               .path)
                                                                           .length >
-                                                                      10
+                                                                      12
                                                                   ? basename(selectedFile!
                                                                               .path)
                                                                           .substring(
                                                                               0,
-                                                                              10) +
+                                                                              6) +
                                                                       '...' +
                                                                       basename(selectedFile!
                                                                               .path)
                                                                           .substring(basename(selectedFile!.path).length -
-                                                                              10)
+                                                                              6)
                                                                   : basename(
                                                                       selectedFile!
                                                                           .path),
@@ -666,38 +666,57 @@ class _TaxPageState extends State<TaxPage> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 20),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Container(
-                        height: 120,
-                        width: MediaQuery.of(context).size.width - 50,
-                        padding: const EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              ExchangeStoryPill(
-                                  exchangeLogoUrl:
-                                      'assets/images/vauld/vauld_logo_light.png',
-                                  nameOfExchange: 'vauld',
-                                  numberOfSteps: 5,
-                                  sizeOfExchangeLogo: 30),
-                              SizedBox(width: 15),
-                              ExchangeStoryPill(
-                                  exchangeLogoUrl:
-                                      'assets/images/wazirx/Wazirx.png',
-                                  nameOfExchange: 'wazirx',
-                                  numberOfSteps: 6,
-                                  sizeOfExchangeLogo: 30),
-                              SizedBox(width: 15),
-                              ExchangeStoryPill(
-                                  exchangeLogoUrl:
-                                      'assets/images/zebpay/zebpay.png',
-                                  nameOfExchange: 'zebpay',
-                                  numberOfSteps: 4,
-                                  sizeOfExchangeLogo: 30),
-                            ]),
+                    child: Container(
+                      // height: 120,
+                      width: MediaQuery.of(context).size.width - 50,
+                      padding: const EdgeInsets.all(5),
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                SizedBox(width: 20),
+                                ExchangeStoryPill(
+                                    exchangeLogoUrl:
+                                        'assets/images/vauld/vauld_logo_light.png',
+                                    nameOfExchange: 'vauld',
+                                    numberOfSteps: 5,
+                                    sizeOfExchangeLogo: 30),
+                                Spacer(),
+                                ExchangeStoryPill(
+                                    exchangeLogoUrl:
+                                        'assets/images/wazirx/Wazirx.png',
+                                    nameOfExchange: 'wazirx',
+                                    numberOfSteps: 6,
+                                    sizeOfExchangeLogo: 30),
+                                Spacer(),
+                                ExchangeStoryPill(
+                                    exchangeLogoUrl:
+                                        'assets/images/zebpay/zebpay.png',
+                                    nameOfExchange: 'zebpay',
+                                    numberOfSteps: 4,
+                                    sizeOfExchangeLogo: 30),
+                                SizedBox(width: 20),
+                              ]),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                SizedBox(width: 20),
+                                ExchangeStoryPill(
+                                    exchangeLogoUrl:
+                                        'assets/images/coindcx/coindcx.png',
+                                    nameOfExchange: 'coindcx',
+                                    numberOfSteps: 4,
+                                    sizeOfExchangeLogo: 30),
+                                Spacer(),
+                              ]),
+                        ],
                       ),
                     ),
                   )

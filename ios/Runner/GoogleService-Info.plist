@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>469194955754-1k7il7h08v8iuc7289lkm4d67rsskdi9.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.469194955754-1k7il7h08v8iuc7289lkm4d67rsskdi9</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>469194955754-jljb5uso5ivrbm9gft3psam0i9lrt73a.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCfVIG3FvyRKfIq-aM2vO3K_s05nnKwfmk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>469194955754</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.three.pay</string>
+	<key>PROJECT_ID</key>
+	<string>pay-firebase-auth</string>
+	<key>STORAGE_BUCKET</key>
+	<string>pay-firebase-auth.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:469194955754:ios:5bb6b782e98689af8e3093</string>
+</dict>
+</plist>

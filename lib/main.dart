@@ -14,6 +14,7 @@ import 'package:threepay/adapters/UserAdapter.dart';
 import 'package:threepay/components/BackButton.dart';
 import 'package:threepay/pages/TaxPage.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,20 @@ void main() async {
           appId: '1:469194955754:android:d65ec6df98f948f38e3093',
           messagingSenderId: '469194955754',
           projectId: 'pay-firebase-auth'));
+
+  Map appsFlyerOptions = {
+    "afDevKey": 'sAg5ASkYowm89xrmbR98NF',
+    "afAppId": 'pay-firebase-auth',
+    "isDebug": true
+  };
+
+  AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+
+  appsflyerSdk.initSdk(
+      registerConversionDataCallback: true,
+      registerOnAppOpenAttributionCallback: true,
+      registerOnDeepLinkingCallback: true);
+  // await appsflyerSdk.logEvent('hi', {'hi': 'hi'});
   runApp(const MyApp());
 }
 
@@ -1038,7 +1053,7 @@ class _ThreePayCardState extends State<ThreePayCard> {
                                               decorationThickness: 2)),
                                       const TextSpan(
                                           text:
-                                              ' future. \n\nGet 3Pay Card, backed by the crypto lying around lazily in your exchanges.')
+                                              ' future. \n\nGet 3Pay Card, supported by the crypto lying around lazily in your exchanges.')
                                     ]),
                               ),
                             )
