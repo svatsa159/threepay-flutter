@@ -722,13 +722,15 @@ class _ThreeHomeState extends State<ThreeHome> {
                           // const SizedBox(height: 50),
                           SizedBox(
                             height: 100,
+                            width: (MediaQuery.of(context).size.width - 40) / 2,
                             child: DefaultTextStyle(
                                 style: GoogleFonts.montserrat(
                                   fontWeight: FontWeight.w200,
                                   fontSize: 20,
                                   color: gold,
                                 ),
-                                child: Text("making crypto easy")),
+                                child: Text(
+                                    "the exclusive community of top 1% crypto hodlers in India.")),
                           ),
                           const SizedBox(height: 200),
                           FutureBuilder(
