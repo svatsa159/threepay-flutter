@@ -52,6 +52,7 @@ dependencies:
   flutter_email_sender: ^5.1.0
   firebase_crashlytics: ^2.6.1
   appsflyer_sdk: ^6.5.2+2
+  firebase_analytics: ^9.1.6
   
 
 dev_dependencies:

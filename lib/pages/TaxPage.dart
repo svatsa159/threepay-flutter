@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
@@ -69,12 +70,16 @@ class _TaxPageState extends State<TaxPage> {
       // print(res.capitalGains);
       double taxes = 0;
       double profits = 0;
-      res.capitalGains.forEach((e) => {
-            taxes += e.totalTax,
-            // print(e.totalProfit),
-            profits += e.totalProfit
-          });
+
       if (res.success) {
+        await FirebaseAnalytics.instance.logEvent(
+          name: "app_calculate_tax_successful",
+        );
+        res.capitalGains.forEach((e) => {
+              taxes += e.totalTax,
+              // print(e.totalProfit),
+              profits += e.totalProfit
+            });
         setState(() {
           fileUploading = false;
           selectedFile = null;
@@ -283,7 +288,11 @@ class _TaxPageState extends State<TaxPage> {
                                               // print('hi');
                                               File file = File(
                                                   result.files.single.path!);
-
+                                              await FirebaseAnalytics.instance
+                                                  .logEvent(
+                                                name:
+                                                    "app_calculate_tax_clicked",
+                                              );
                                               if (basename(file.path)
                                                           .split('.')[1] ==
                                                       "csv" ||

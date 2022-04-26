@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -830,7 +831,10 @@ class _GSignInState extends State<GSignIn> {
     assert(await _user?.getIdToken() != null);
     User currentUser = _auth.currentUser!;
     assert(_user?.uid == currentUser.uid);
-    // print("User Name: ${_user?.displayName}");
+    await FirebaseAnalytics.instance.logEvent(
+      name: "app_google_login",
+    );
+    // print("User Name: ${_user?.di  splayName}");
     // print("User Email ${_user?.email}");
     setState(() {
       isLoading = false;
@@ -942,10 +946,14 @@ class _ThreePayCardState extends State<ThreePayCard> {
   joinWaitlist(String uid) {
     UserAdapter()
         .toggleWaitlist(uid)
-        .then((done) => {
+        .then((done) async => {
               if (done)
                 {
-                  setState(() => {isWaitlistLoading = false, isAnimated = true})
+                  setState(
+                      () => {isWaitlistLoading = false, isAnimated = true}),
+                  await FirebaseAnalytics.instance.logEvent(
+                    name: "app_waitlist_joined",
+                  )
                 }
               else
                 {
